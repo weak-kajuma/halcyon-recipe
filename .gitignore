@@ -1,0 +1,16 @@
+# python
+__pycache__
+
+# python venv
+venv
+env
+.venv
+.env
+
+# results & temp dir
+results
+result
+logs
+log
+cache
+data
