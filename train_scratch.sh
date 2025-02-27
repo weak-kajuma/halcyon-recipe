@@ -6,7 +6,7 @@ EPOCH=1
 CUDA_VISIBLE_DEVICES=0 WANDB_PROJECT=halcyon python run_clm.py \
     --model_type "llama" \
     --model_name_or_path meta-llama/Llama-3.2-1B \
-    --preprocessed_dataset_name kajuma/training_01-09_token \
+    --preprocessed_dataset_name kajuma/training_02_26 \
     --output_dir ./scratch \
     --cache_dir ./cache/ \
     --do_train \
@@ -19,8 +19,8 @@ CUDA_VISIBLE_DEVICES=0 WANDB_PROJECT=halcyon python run_clm.py \
     --logging_steps 1 \
     --save_strategy "steps" \
     --eval_strategy "steps" \
-    --save_steps 300 \
-    --eval_steps 300 \
+    --save_steps 200 \
+    --eval_steps 400 \
     --save_total_limit 100000 \
     --per_device_train_batch_size $BATCH_SIZE \
     --per_device_eval_batch_size $BATCH_SIZE \

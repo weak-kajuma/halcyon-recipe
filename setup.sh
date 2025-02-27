@@ -5,4 +5,3 @@ pip install flash-attn --no-build-isolation
 pip install transformer_engine[pytorch]
 
 HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download meta-llama/Llama-3.2-1B
-HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download kajuma/ABEJA-CC-JA-edu --repo-type dataset

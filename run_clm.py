@@ -152,7 +152,7 @@ class DataTrainingArguments:
     dataset_config_name: Optional[str] = field(
         default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
     )
-    streaming: bool = field(default=False, metadata={"help": "Enable streaming mode"})
+    streaming: bool = field(default=True, metadata={"help": "Enable streaming mode"})
     overwrite_cache: bool = field(
         default=False, metadata={"help": "Overwrite the cached training and evaluation sets"}
     )
