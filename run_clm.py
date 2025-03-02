@@ -152,9 +152,12 @@ class DataTrainingArguments:
     dataset_config_name: Optional[str] = field(
         default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
     )
-    streaming: bool = field(default=True, metadata={"help": "Enable streaming mode"})
     overwrite_cache: bool = field(
         default=False, metadata={"help": "Overwrite the cached training and evaluation sets"}
+    )
+    preprocessing_num_workers: Optional[int] = field(
+        default=None,
+        metadata={"help": "The number of processes to use for the preprocessing."},
     )
     def __post_init__(self):
         if self.streaming:
@@ -305,7 +308,13 @@ def main():
 
 
     with training_args.main_process_first(desc="loading dataset from hub"):
-        lm_datasets = load_dataset(name=data_args.preprocessed_dataset_name, streaming=data_args.streaming)
+        raw_datasets = load_dataset(name=data_args.preprocessed_dataset_name)
+        attention_mask = [1 for _ in raw_datasets[0]["input_ids"]]
+        def expand_func(item):
+            item["attention_mask"] = attention_mask
+            item["labels"] = item["input_ids"]
+            return item
+        lm_datasets = raw_datasets.map(expand_func, num_proc=data_args.preprocessing_num_workers)
 
     if training_args.do_train:
         if "train" not in lm_datasets:

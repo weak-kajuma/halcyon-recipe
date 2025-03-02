@@ -3,10 +3,10 @@ BATCH_SIZE=4
 GRADIENT_ACCUMULATION_STEPS=64
 EPOCH=1
 
-CUDA_VISIBLE_DEVICES=0 WANDB_PROJECT=halcyon python run_clm.py \
+WANDB_PROJECT=halcyon python run_clm.py \
     --model_type "llama" \
     --model_name_or_path meta-llama/Llama-3.2-1B \
-    --preprocessed_dataset_name kajuma/training_02_26 \
+    --preprocessed_dataset_name kajuma/training_02_28 \
     --output_dir ./scratch \
     --cache_dir ./cache/ \
     --do_train \
