@@ -10,7 +10,6 @@ from datasets import load_dataset
 
 import transformers
 from transformers import (
-    MODEL_FOR_CAUSAL_LM_MAPPING,
     AutoTokenizer,
     HfArgumentParser,
     TrainingArguments,
@@ -26,11 +25,6 @@ check_min_version("4.46.0")
 require_version("datasets>=2.14.0", "To fix: pip install -r examples/pytorch/language-modeling/requirements.txt")
 
 logger = logging.getLogger(__name__)
-
-
-MODEL_CONFIG_CLASSES = list(MODEL_FOR_CAUSAL_LM_MAPPING.keys())
-MODEL_TYPES = tuple(conf.model_type for conf in MODEL_CONFIG_CLASSES)
-
 
 @dataclass
 class ModelArguments:
