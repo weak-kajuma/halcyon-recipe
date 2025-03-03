@@ -341,7 +341,9 @@ def main():
 
     dataset_size = sum(tokenized_datasets["train"]["length"])
     print(f"train dataset size: {dataset_size/1000**3:.2f}B tokens")
-    tokenized_datasets = tokenized_datasets.select_columns("input_ids")
+    with open("dataset_size.txt", mode="w") as f:
+        f.write(f"train dataset size: {dataset_size/1000**3:.2f}B tokens")
+    tokenized_datasets = tokenized_datasets.remove_columns("length")
 
     if data_args.block_size > tokenizer.model_max_length:
         logger.warning(

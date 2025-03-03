@@ -159,9 +159,6 @@ class DataTrainingArguments:
         default=None,
         metadata={"help": "The number of processes to use for the preprocessing."},
     )
-    def __post_init__(self):
-        if self.streaming:
-            require_version("datasets>=2.0.0", "The streaming feature requires `datasets>=2.0.0`")
 
 
 def main():
@@ -308,8 +305,8 @@ def main():
 
 
     with training_args.main_process_first(desc="loading dataset from hub"):
-        raw_datasets = load_dataset(name=data_args.preprocessed_dataset_name)
-        attention_mask = [1 for _ in raw_datasets[0]["input_ids"]]
+        raw_datasets = load_dataset(path=data_args.preprocessed_dataset_name)
+        attention_mask = [1 for _ in raw_datasets["test"][0]["input_ids"]]
         def expand_func(item):
             item["attention_mask"] = attention_mask
             item["labels"] = item["input_ids"]

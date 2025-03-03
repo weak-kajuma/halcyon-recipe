@@ -1,9 +1,9 @@
 # global batch size = 2048
-BATCH_SIZE=4
-GRADIENT_ACCUMULATION_STEPS=64
+BATCH_SIZE=32
+GRADIENT_ACCUMULATION_STEPS=16
 EPOCH=1
 
-WANDB_PROJECT=halcyon python run_clm.py \
+WANDB_PROJECT=halcyon accelerate launch run_clm.py \
     --model_type "llama" \
     --model_name_or_path meta-llama/Llama-3.2-1B \
     --preprocessed_dataset_name kajuma/training_02_28 \
@@ -27,8 +27,8 @@ WANDB_PROJECT=halcyon python run_clm.py \
     --low_cpu_mem_usage \
     --torch_dtype "bfloat16" \
     --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
-    --push_to_hub False \
-    --preprocessing_num_workers 24 \
+    --push_to_hub True \
+    --preprocessing_num_workers  \
     --dataloader_num_workers 24 \
     --attn_implementation "flash_attention_2" \
     --report_to wandb \
