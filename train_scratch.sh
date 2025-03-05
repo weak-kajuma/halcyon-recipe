@@ -34,10 +34,12 @@ CUDA_VISIBLE_DEVICES=0 WANDB_PROJECT=halcyon accelerate launch run_clm.py \
     --report_to wandb \
     --use_liger_kernel False \
     --seed 3407 \
-    --optim schedule_free_radam \
-    --learning_rate 3.0e-3 \
+    --optim adamw_bnb_8bit \
+    --warmup_steps 300 \
+    --min_lr_rate 0.1 \
+    --learning_rate 5.0e-4 \
     --weight_decay 0.1 \
     --adam_beta2 0.95 \
-    --lr_scheduler_type constant \
+    --lr_scheduler_type cosine_with_min_lr \
     --adam_epsilon 1.0e-8
     # --resume_from_checkpoint ./scratch/checkpoint-5000/
