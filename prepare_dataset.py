@@ -103,12 +103,11 @@ class DataTrainingArguments:
         metadata={"help": "An optional input evaluation data file to evaluate the perplexity on (a text file)."},
     )
     text_column_name: Optional[str] = field(default="text", metadata={"help": "The column of training data."})
-    max_train_samples: Optional[int] = field(
+    num_training_samples: Optional[int] = field(
         default=None,
         metadata={
             "help": (
-                "For debugging purposes or quicker training, truncate the number of training examples to this "
-                "value if set."
+                "Limit the size of the training dataset."
             )
         },
     )
@@ -217,7 +216,7 @@ def main():
         raw_datasets = load_dataset(
             data_args.dataset_name,
             data_args.dataset_config_name,
-            num_proc=data_args.preprocessing_num_workers,
+            # num_proc=data_args.preprocessing_num_workers,
             token=model_args.token,
             trust_remote_code=model_args.trust_remote_code,
             cache_dir=model_args.cache_dir,
@@ -316,6 +315,7 @@ def main():
     tokenized_datasets = raw_datasets.map(
         tokenize_function,
         batched=True,
+        batch_size=10**4,
         remove_columns=column_names,
         # num_proc=data_args.preprocessing_num_workers,
         load_from_cache_file=not data_args.overwrite_cache,
@@ -356,13 +356,21 @@ def main():
     #
     # To speed up this part, we use multiprocessing. See the documentation of the map method for more information:
     # https://huggingface.co/docs/datasets/process#map
-    lm_datasets = tokenized_datasets.map(
+    grouped_datasets = tokenized_datasets.map(
         group_texts,
         batched=True,
         num_proc=data_args.preprocessing_num_workers,
         load_from_cache_file=not data_args.overwrite_cache,
         desc=f"Grouping texts in chunks of {block_size}",
     )
+
+    if data_args.num_training_samples:
+        lm_datasets["train"] = grouped_datasets["train"].select(range(data_args.num_training_samples))
+        lm_datasets["test"] = grouped_datasets["test"].select(
+            range(data_args.num_training_samples*data_args.test_split_percentage/(100-data_args.test_split_percentage))
+        )
+    else:
+        lm_datasets = grouped_datasets
     
     lm_datasets.save_to_disk(
         training_args.output_dir,

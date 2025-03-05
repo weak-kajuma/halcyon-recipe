@@ -81,10 +81,6 @@ class ModelArguments:
     tokenizer_name: Optional[str] = field(
         default=None, metadata={"help": "Pretrained tokenizer name or path if not the same as model_name"}
     )
-    cache_dir: Optional[str] = field(
-        default=None,
-        metadata={"help": "Where do you want to store the pretrained models downloaded from huggingface.co"},
-    )
     use_fast_tokenizer: bool = field(
         default=True,
         metadata={"help": "Whether to use one of the fast tokenizer (backed by the tokenizers library) or not."},
@@ -161,9 +157,6 @@ class DataTrainingArguments:
         default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
     )
     streaming: bool = field(default=False, metadata={"help": "Enable streaming mode"})
-    overwrite_cache: bool = field(
-        default=False, metadata={"help": "Overwrite the cached training and evaluation sets"}
-    )
     def __post_init__(self):
         if self.streaming:
             require_version("datasets>=2.0.0", "The streaming feature requires `datasets>=2.0.0`")
@@ -317,7 +310,10 @@ def main():
 
 
     with training_args.main_process_first(desc="loading dataset from hub"):
-        lm_datasets = load_dataset(name=data_args.preprocessed_dataset_name, streaming=data_args.streaming)
+        lm_datasets = load_dataset(
+            path=data_args.preprocessed_dataset_name,
+            streaming=data_args.streaming
+        )
 
     if training_args.do_train:
         if "train" not in lm_datasets:
