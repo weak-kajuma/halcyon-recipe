@@ -9,7 +9,6 @@ CUDA_VISIBLE_DEVICES=0 WANDB_PROJECT=halcyon accelerate launch run_clm.py \
     --streaming True \
     --output_dir ./scratch \
     --do_train \
-    --do_eval \
     --prediction_loss_only \
     --remove_unused_columns False \
     --max_steps 20480 \
@@ -17,22 +16,19 @@ CUDA_VISIBLE_DEVICES=0 WANDB_PROJECT=halcyon accelerate launch run_clm.py \
     --logging_strategy "steps" \
     --logging_steps 1 \
     --save_strategy "steps" \
-    --eval_strategy "steps" \
-    --save_steps 1000 \
-    --eval_steps 1000 \
-    --save_total_limit 100000 \
+    --save_steps 50 \
+    --save_total_limit 3 \
     --per_device_train_batch_size $BATCH_SIZE \
-    --per_device_eval_batch_size $BATCH_SIZE \
     --low_cpu_mem_usage \
     --torch_dtype "bfloat16" \
     --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
     --push_to_hub True \
-    --hub_strategy all_checkpoints \
-    --hub_model_id halcyon-llm/test \
+    --hub_strategy every_save \
+    --hub_model_id halcyon-llm/Llama-halcyon-1B-scratch \
     --dataloader_num_workers 24 \
     --attn_implementation "flash_attention_2" \
     --report_to wandb \
-    --use_liger_kernel False \
+    --use_liger_kernel True \
     --seed 3407 \
     --optim adamw_bnb_8bit \
     --warmup_steps 300 \
